@@ -1,0 +1,52 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity brick_breaker is
+	port(
+		ADC_CLK_10 : in std_logic;
+		MAX10_CLK1_50 : in std_logic;
+		MAX10_CLK2_50 : in std_logic;
+		KEY : std_logic_vector(1 downto 0); -- [0] reset and [1] next
+		LEDR : out std_logic_vector(9 downto 0);
+		SW : in std_logic_vector(9 downto 0);
+		VGA_R 	: out std_logic_vector(3 downto 0);
+		VGA_G 	: out std_logic_vector(3 downto 0);
+		VGA_B 	: out std_logic_vector(3 downto 0);
+		VGA_HS 	: out std_logic;
+		VGA_VS 	: out std_logic		
+		ARDUINO_IO : inout std_logic_vector(15 downto 0);
+		ARDUINO_RESET_N : inout std_logic
+	);
+end entity brick_breaker;
+
+architecture behavioral of brick_breaker is
+
+signal twelve_bit : std_logic_vector(11 downto 0) := X"000";
+signal level : std_logic_vector(11 downto 0) := X"000";
+signal rst_l : std_logic;
+
+	component my_adc is 										-- creates digital value from potentiometer
+		port (
+			CLOCK : in  std_logic                     := 'X'; 	-- clk
+			RESET : in  std_logic                     := 'X'; 	-- reset
+			CH0   : out std_logic_vector(11 downto 0)        	-- CH0
+		);
+	end component my_adc;
+
+begin
+	
+	u0 : component my_adc
+	port map (
+		CLOCK => MAX10_CLK1_50, --      clk.clk
+		RESET => rst_l, --    reset.reset
+		CH0   => level   --         .CH1
+	);
+	
+	process(MAX10_CLK1_50)begin
+		if(rising_edge(MAX10_CLK1_50)) then
+		
+		end if;
+	end process;
+	
+end architecture behavioral;

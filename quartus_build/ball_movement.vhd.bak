@@ -1,0 +1,129 @@
++library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ball_movement is
+	port (
+		count				: in std_logic; -- count1 from VGA timing
+		reset				: in std_logic; -- KEY(0)
+		new_ball			: in std_logic; -- KEY(1)
+		collision		: in std_logic_vector(0 to 3); -- from detector process
+		ball_x			: out integer;
+		ball_y 			: out integer
+	);
+end entity sync;
+
+architecture behavioral of ball_movement is
+
+-- signals for ball movement
+	signal ball_x : integer := 316;
+	signal ball_y : integer := 250;
+	signal next_ball_y : integer := 316;
+	signal next_ball_x : integer := 250;
+	signal ball_counter : integer := 0;
+	signal next_ball_counter : integer := 0;
+	signal ball_exists : std_logic := '0';
+	signal x_move : integer := 0;
+	signal y_move : integer := 1;
+	signal next_x_move : integer := 0;
+	signal next_y_move : integer := 1;
+	
+	-- synchronous process
+	process(count) begin
+		
+	end process;
+
+	-- FSM (IDLE, INITIAL, TOP, RIG, LEF, DIE, PAD_C, PAD_L1, PAD_L2, PAD_R1, PAD_R2)
+	process(collision, ball_x, ball_y) begin
+		case current_ball_state is
+			when IDLE =>
+				next_y_move <= 0;
+				next_x_move <= 0;
+				next_ball_y <= 316;
+				next_ball_x <= 250;
+				case collision is
+					when '0000' => -- PAD_C
+						next_ball_state <= PAD_C;
+					when '0001' => -- PAD_R1
+						next_ball_state <= PAD_R1;
+					when '0010' => -- PAD_R2
+						next_ball_state <= PAD_R2;
+					when '0011' => -- PAD_L1
+						next_ball_state <= PAD_L1;
+					when '0100' => -- PAD_L2
+						next_ball_state <= PAD_L2;
+					when '0101' => -- RIG
+						next_ball_state <= RIG;
+					when '0110' => -- LEF
+						next_ball_state <= LEF;
+					when '0111' => -- TOP
+						next_ball_state <= TOP;
+					when '1000' => -- DIE
+						next_ball_state <= DIE;
+				end case;
+				
+			when INITIAL =>
+				if KEY(1) = '1' then
+					next_y_move <= 1;
+					next_x_move <= 0;
+					next_ball_y <= ball_y + y_move;
+					next_ball_x <= ball_x + x_move;
+					next_ball_state <= INITIAL;
+				else
+					next_y_move <= y_move;
+					next_x_move <= x_move;
+					next_ball_y <= ball_y;
+					next_ball_x <= ball_x;
+					case collision is
+						when '0000' => -- PAD_C
+							next_ball_state <= PAD_C;
+						when '0001' => -- PAD_R1
+							next_ball_state <= PAD_R1;
+						when '0010' => -- PAD_R2
+							next_ball_state <= PAD_R2;
+						when '0011' => -- PAD_L1
+							next_ball_state <= PAD_L1;
+						when '0100' => -- PAD_L2
+							next_ball_state <= PAD_L2;
+						when '0101' => -- RIG
+							next_ball_state <= RIG;
+						when '0110' => -- LEF
+							next_ball_state <= LEF;
+						when '0111' => -- TOP
+							next_ball_state <= TOP;
+						when '1000' => -- DIE
+							next_ball_state <= DIE;
+					end case;
+				end if;
+				
+			when TOP => 
+				next_y_move <= -y_move;
+				next_x_move <= x_move;
+				next_ball_y <= ball_y + y_move;
+				next_ball_x <= ball_x + x_move;
+				case collision is
+					when '0000' => -- PAD_C
+						next_ball_state <= PAD_C;
+					when '0001' => -- PAD_R1
+						next_ball_state <= PAD_R1;
+					when '0010' => -- PAD_R2
+						next_ball_state <= PAD_R2;
+					when '0011' => -- PAD_L1
+						next_ball_state <= PAD_L1;
+					when '0100' => -- PAD_L2
+						next_ball_state <= PAD_L2;
+					when '0101' => -- RIG
+						next_ball_state <= RIG;
+					when '0110' => -- LEF
+						next_ball_state <= LEF;
+					when '0111' => -- TOP
+						next_ball_state <= TOP;
+					when '1000' => -- DIE
+						next_ball_state <= DIE;
+				end case;
+			when
+	
+
+	
+	end process;
+end architecture behavioral;	

@@ -1,0 +1,9 @@
+# # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
+# 
+preplace inst my_adc -pg 1 -lvl 1 -y 40 -regy -20
+preplace inst my_adc.adc_mega_0 -pg 1 -lvl 1 -y 30
+preplace netloc EXPORT<net_container>my_adc</net_container>(SLAVE)my_adc.reset,(SLAVE)adc_mega_0.reset) 1 0 1 NJ
+preplace netloc EXPORT<net_container>my_adc</net_container>(SLAVE)my_adc.readings,(SLAVE)adc_mega_0.readings) 1 0 1 NJ
+preplace netloc EXPORT<net_container>my_adc</net_container>(SLAVE)adc_mega_0.clk,(SLAVE)my_adc.clk) 1 0 1 NJ
+levelinfo -pg 1 0 60 210
+levelinfo -hier my_adc 70 100 200

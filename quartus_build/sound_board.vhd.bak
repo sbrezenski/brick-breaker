@@ -1,0 +1,139 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity sound_board is
+	port (
+		CLK : in std_logic;
+		SOUND_EFFECT : in std_logic_vector(2 downto 0);
+		SOUND_OUT : out std_logic
+	);
+end entity sound_board;
+
+architecture behavioral of sound_board is
+
+signal output : std_logic := '0';
+signal sound_effect_sig : std_logic_vector (2 downto 0) := '000';
+signal ready : std_logic := '1';
+signal sound_count : unsigned := 0;
+
+begin
+	
+	process(CLK) begin
+		if rising_edge(CLK) then
+			if ready = '1' then
+				sound_effect_sig <= SOUND_EFFECT;
+			else
+				sound_effect_sig <= sound_effect_sig;
+			end if;
+			case sound_effect_sig is
+				when '000' =>
+					output <= '0';
+					sound_count <= 0;
+					ready <= '1';
+				when '001' =>
+					if sound_count <= 18000000 then
+						ready <= '0';
+						sound_count <= sound_count + 1;
+						if sound_count <= 6000000 then
+							if sound_count mod 100000 = 0 then
+								ouput <= not output;
+							end if;
+						elsif sound_count <= 12000000
+							if sound_count mod 80000 = 0 then
+								ouput <= not output;
+							end if;						
+						else
+							if sound_count mod 120000 = 0 then
+								ouput <= not output;
+							end if;
+						end if;
+					else
+						ready <= '1';
+						output <= '0';
+					end if;	
+
+				when '010' =>
+					if sound_count <= 18000000 then
+						ready <= '0';
+						sound_count <= sound_count + 1;
+						if sound_count <= 6000000 then
+							if sound_count mod 135000 = 0 then
+								ouput <= not output;
+							end if;
+						elsif sound_count <= 12000000
+							if sound_count mod 75000 = 0 then
+								ouput <= not output;
+							end if;						
+						else
+							if sound_count mod 50000 = 0 then
+								ouput <= not output;
+							end if;
+						end if;
+					else
+						ready <= '1';
+						output <= '0';
+					end if;	
+			
+				when '011' =>
+					if sound_count <= 18000000 then
+						ready <= '0';
+						sound_count <= sound_count + 1;
+						if sound_count <= 6000000 then
+							if sound_count mod 200000 = 0 then
+								ouput <= not output;
+							end if;
+						elsif sound_count <= 12000000
+							if sound_count mod 175000 = 0 then
+								ouput <= not output;
+							end if;						
+						else
+							if sound_count mod 150000 = 0 then
+								ouput <= not output;
+							end if;
+						end if;
+					else
+						ready <= '1';
+						output <= '0';
+					end if;	
+					else
+						ready <= '1';
+						sound_count <= 0;
+					end if;				
+				when '100' =>
+					if sound_count <= 18000000 then
+						ready <= '0';
+						sound_count <= sound_count + 1;
+						if sound_count <= 6000000 then
+							if sound_count mod 100000 = 0 then
+								ouput <= not output;
+							end if;
+						elsif sound_count <= 12000000
+							if sound_count mod 80000 = 0 then
+								ouput <= not output;
+							end if;						
+						else
+							if sound_count mod 120000 = 0 then
+								ouput <= not output;
+							end if;
+						end if;
+					else
+						ready <= '1';
+						output <= '0';
+					end if;	
+			
+				when others =>
+					output <= '0';
+			end case;		
+		end if;
+	end process;
+
+	process(output) begin
+		SOUND_OUT <= output;
+	end process;
+	
+	process(SOUND_EFFECT) begin
+		sound_effect_sig <= SOUND_EFFECT;
+	end process;
+	
+end architecture behavioral;	
